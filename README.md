@@ -51,7 +51,7 @@ For the sake of time, I had to make a few assumptions
 	- Making sure a provider can only update their own schedule
 	- Making sure a client can only confirm their own reservations
 	- Making sure a client can only view/book their provider's schedule (if a provider assignment is applicable)
-- Using a full-fledged RDMS, such as PostgreSQL
+- Using a full-fledged RDBMS, such as PostgreSQL
 	- Use foreign keys to link reservation and provider ids across tables
 - Moving the expired reservation clearing task to out-of-band
 
