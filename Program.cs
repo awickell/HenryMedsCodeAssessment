@@ -1,3 +1,6 @@
+using HenryMedsCodeAssessment.Data;
+using HenryMedsCodeAssessment.Tasks;
+
 namespace HenryMedsCodeAssessment
 {
     public class Program
@@ -6,9 +9,10 @@ namespace HenryMedsCodeAssessment
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddControllers();
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            // TODO: Source database connection string from configuration
+            var connectionString = "Data Source=test.sqlite";
+
+            AddServices(builder.Services, connectionString, builder.Environment.IsDevelopment());
 
             var app = builder.Build();
 
@@ -22,6 +26,28 @@ namespace HenryMedsCodeAssessment
             app.UseAuthorization();
             app.MapControllers();
             app.Run();
+
+        }
+
+        public static void AddServices(IServiceCollection services, string connectionString, bool isDev = true)
+        {
+            services.AddControllers();
+            services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen();
+
+            if (isDev)
+            {
+                // Use SQLite for test/dev purposes, no necessary installation
+                services.AddSqlite<ReservationDb>(connectionString);
+            }
+
+            else
+            {
+                // TODO: Connect to existing production DB, e.g. PostgreSQL
+                throw new NotImplementedException("No production DB connection implemented");
+            }
+
+            services.AddHostedService<ClearExpiredReservations>();
         }
     }
 }
